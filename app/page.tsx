@@ -1,6 +1,27 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Home() {
+  const [status, setStatus] = useState<"loading" | "connected" | "error">("loading");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function testConnection() {
+      try {
+        const { error } = await supabase.auth.getSession();
+        if (error) throw error;
+        setStatus("connected");
+      } catch (err) {
+        setStatus("error");
+        setErrorMessage(err instanceof Error ? err.message : String(err));
+      }
+    }
+    testConnection();
+  }, []);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -16,6 +37,19 @@ export default function Home() {
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
           </h1>
+          <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 px-4 py-3 text-left">
+            {status === "loading" && (
+              <p className="text-zinc-600 dark:text-zinc-400">Checking Supabase…</p>
+            )}
+            {status === "connected" && (
+              <p className="font-medium text-green-600 dark:text-green-400">Supabase connected</p>
+            )}
+            {status === "error" && (
+              <p className="font-medium text-red-600 dark:text-red-400">
+                Supabase error: {errorMessage}
+              </p>
+            )}
+          </div>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
             Looking for a starting point or more instructions? Head over to{" "}
             <a
