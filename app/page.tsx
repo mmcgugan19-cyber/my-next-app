@@ -72,8 +72,8 @@ export default function Home() {
                 Free for all 50 states
               </div>
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight">
-                Know Exactly What
-                <br className="hidden sm:block" /> To Do Next.
+                Navigate Estate Settlement
+                <span className="text-cyan-400"> with Confidence</span>
               </h1>
               <p className="mt-6 text-lg lg:text-xl text-slate-300 leading-relaxed max-w-lg">
                 Answer a few simple questions and get a personalized roadmap for
