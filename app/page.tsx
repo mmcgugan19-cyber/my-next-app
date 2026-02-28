@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AuthNav from "@/components/AuthNav";
 
 const features = [
   {
@@ -56,32 +57,7 @@ export default function Home() {
             </div>
             <span className="font-semibold text-lg tracking-tight">EstateIQ</span>
           </Link>
-          <div className="flex items-center gap-8">
-            <Link
-              href="/how-it-works"
-              className="text-sm text-slate-600 hover:text-slate-900 transition-colors hidden sm:block"
-            >
-              How It Works
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm text-slate-600 hover:text-slate-900 transition-colors hidden sm:block"
-            >
-              About
-            </Link>
-            <Link
-              href="/login"
-              className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
-            >
-              Log In
-            </Link>
-            <Link
-              href="/intake"
-              className="text-sm font-medium bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors shadow-sm"
-            >
-              Start Free Assessment
-            </Link>
-          </div>
+          <AuthNav />
         </div>
       </nav>
 
