@@ -70,6 +70,12 @@ export default function Home() {
               About
             </Link>
             <Link
+              href="/login"
+              className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+            >
+              Log In
+            </Link>
+            <Link
               href="/intake"
               className="text-sm font-medium bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors shadow-sm"
             >
