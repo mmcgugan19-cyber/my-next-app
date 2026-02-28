@@ -62,46 +62,107 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800">
-        <div className="absolute inset-0 hero-pattern" />
-        <div className="relative max-w-6xl mx-auto px-6 py-24 lg:py-32">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-sm mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              Free for all 50 states
-            </div>
-            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight">
-              Navigate Estate Settlement
-              <span className="text-cyan-400"> with Confidence</span>
-            </h1>
-            <p className="mt-6 text-lg lg:text-xl text-slate-300 leading-relaxed max-w-2xl">
-              Answer a few simple questions and get a personalized roadmap for
-              settling your loved one&apos;s estate. No legal jargon. No expensive
-              retainers. Just clarity.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <Link
-                href="/intake"
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-cyan-600 text-white font-semibold text-lg hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-600/25 hover:shadow-cyan-500/30"
-              >
-                Start Your Free Assessment
-                <svg
-                  className="ml-2.5 w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-50/80">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-amber-50/70 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gradient-to-tr from-cyan-50/40 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="relative max-w-6xl mx-auto px-6 py-20 lg:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-700 text-sm mb-8">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                Free for all 50 states
+              </div>
+              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-navy-950 leading-[1.1] tracking-tight">
+                Know Exactly What
+                <br className="hidden sm:block" /> To Do Next.
+              </h1>
+              <p className="mt-6 text-lg lg:text-xl text-slate-600 leading-relaxed max-w-lg">
+                Answer a few simple questions and get a personalized roadmap for
+                settling your loved one&apos;s estate. No legal jargon. No expensive
+                retainers. Just clarity.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <Link
+                  href="/intake"
+                  className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-cyan-600 text-white font-semibold text-lg hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-600/25 hover:shadow-cyan-500/30"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                  />
-                </svg>
-              </Link>
-              <span className="text-sm text-slate-400">
-                Takes about 5 minutes &middot; No account required
-              </span>
+                  Start Your Free Assessment
+                  <svg
+                    className="ml-2.5 w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </Link>
+                <span className="text-sm text-slate-500">
+                  Instant personalized checklist — Takes about 5 minutes
+                </span>
+              </div>
+            </div>
+
+            {/* Hero visual — product preview checklist */}
+            <div className="relative hidden lg:block">
+              <div className="absolute -inset-4 bg-gradient-to-tr from-amber-100/40 via-transparent to-cyan-100/30 rounded-3xl blur-2xl pointer-events-none" />
+              <div className="relative bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200/60 p-8">
+                <div className="flex gap-1.5 mb-6">
+                  <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                </div>
+                <div className="text-sm font-medium text-slate-400 mb-5">Your Estate Roadmap</div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded bg-cyan-500 flex items-center justify-center shrink-0">
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </div>
+                    <span className="text-sm text-slate-700">Gather essential documents</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded bg-cyan-500 flex items-center justify-center shrink-0">
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </div>
+                    <span className="text-sm text-slate-700">Determine probate requirements</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded border-2 border-cyan-400 bg-cyan-50 shrink-0" />
+                    <span className="text-sm text-slate-700 font-medium">File with county probate court</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded border-2 border-slate-200 shrink-0" />
+                    <span className="text-sm text-slate-400">Notify creditors &amp; beneficiaries</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded border-2 border-slate-200 shrink-0" />
+                    <span className="text-sm text-slate-400">Distribute assets per will</span>
+                  </div>
+                </div>
+                <div className="mt-6 pt-5 border-t border-slate-100">
+                  <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                    <span>Progress</span>
+                    <span>2 of 5 complete</span>
+                  </div>
+                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full w-2/5 bg-cyan-500 rounded-full" />
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -top-3 -right-3 bg-white rounded-xl px-4 py-2.5 shadow-lg border border-slate-200/60">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-xs font-medium text-slate-600">Updated for your state</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
