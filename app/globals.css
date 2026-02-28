@@ -63,6 +63,100 @@ body {
   animation: fadeInUp 0.35s ease-out;
 }
 
+/* ========================================
+   Palette 2: Modern Estate
+   Forest/British Racing Green + Copper/Bronze
+   Warm Charcoal secondary, Soft Parchment bg
+   ======================================== */
+[data-theme="estate"] {
+  --background: #faf6f0;
+  --foreground: #1c1a16;
+
+  /* Primary: Forest / British Racing Green */
+  --color-navy-950: #061208;
+  --color-navy-900: #0c261a;
+  --color-navy-800: #143826;
+  --color-navy-700: #1c4a33;
+  --color-navy-600: #255c40;
+  --color-navy-500: #2e6f4e;
+  --color-navy-400: #4e9572;
+  --color-navy-300: #7dba9c;
+  --color-navy-200: #b2d8c6;
+  --color-navy-100: #d9ede3;
+  --color-navy-50: #edf6f1;
+
+  /* Accent: Copper / Bronze */
+  --color-cyan-50: #fdf6f0;
+  --color-cyan-100: #f8e8d4;
+  --color-cyan-200: #f0d0a8;
+  --color-cyan-300: #e4b37a;
+  --color-cyan-400: #d4944c;
+  --color-cyan-500: #c07830;
+  --color-cyan-600: #a06028;
+  --color-cyan-700: #804820;
+
+  /* Secondary: Warm Charcoal */
+  --color-slate-50: #f8f5f0;
+  --color-slate-100: #f0ebe3;
+  --color-slate-200: #e0dbd2;
+  --color-slate-300: #c5bfb3;
+  --color-slate-400: #9a9385;
+  --color-slate-500: #757063;
+  --color-slate-600: #524e44;
+  --color-slate-900: #1c1a16;
+}
+
+[data-theme="estate"] *:focus-visible {
+  outline-color: #a06028;
+}
+
+/* ========================================
+   Palette 3: Pure Intelligence
+   Deep Obsidian + Electric Indigo
+   Steel Blue secondary, High-Contrast White bg
+   ======================================== */
+[data-theme="intelligence"] {
+  --background: #ffffff;
+  --foreground: #0a0a12;
+
+  /* Primary: Deep Obsidian */
+  --color-navy-950: #06060f;
+  --color-navy-900: #0c0e1e;
+  --color-navy-800: #14182f;
+  --color-navy-700: #1e2442;
+  --color-navy-600: #283056;
+  --color-navy-500: #343e6c;
+  --color-navy-400: #526394;
+  --color-navy-300: #8094be;
+  --color-navy-200: #b3c0da;
+  --color-navy-100: #d9dfee;
+  --color-navy-50: #edf0f7;
+
+  /* Accent: Electric Indigo */
+  --color-cyan-50: #f1eeff;
+  --color-cyan-100: #e2dcfe;
+  --color-cyan-200: #c6b8fd;
+  --color-cyan-300: #a78bfa;
+  --color-cyan-400: #8b5cf6;
+  --color-cyan-500: #7c3aed;
+  --color-cyan-600: #6d28d9;
+  --color-cyan-700: #5b21b6;
+
+  /* Secondary: Steel Blue */
+  --color-slate-50: #f1f4f8;
+  --color-slate-100: #e3e8f0;
+  --color-slate-200: #d5dbe6;
+  --color-slate-300: #b0bbcc;
+  --color-slate-400: #8090a8;
+  --color-slate-500: #5c6e85;
+  --color-slate-600: #3d4f65;
+  --color-slate-900: #0a0e18;
+}
+
+[data-theme="intelligence"] *:focus-visible {
+  outline-color: #7c3aed;
+}
+
 /* Print styles for strategy report */
 @media print {
   .no-print {
