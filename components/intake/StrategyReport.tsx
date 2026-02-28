@@ -1,6 +1,7 @@
 import { IntakeData, StrategyResult } from '@/types/intake'
 import { STATES } from '@/data/states'
 import Button from '@/components/ui/Button'
+import SaveProgressCard from '@/components/intake/SaveProgressCard'
 import Link from 'next/link'
 
 interface ReportProps {
@@ -8,7 +9,7 @@ interface ReportProps {
   onStartOver: () => void
 }
 
-function computeStrategy(data: IntakeData): StrategyResult {
+export function computeStrategy(data: IntakeData): StrategyResult {
   const stateInfo = STATES[data.state]
 
   const hasProbateAssets =
@@ -403,6 +404,9 @@ export default function StrategyReport({ data, onStartOver }: ReportProps) {
           </div>
         </div>
       )}
+
+      {/* Save Progress / Create Account */}
+      <SaveProgressCard data={data} result={result} />
 
       {/* Disclaimer + Actions */}
       <div className="pt-6 border-t border-slate-200 space-y-6">
