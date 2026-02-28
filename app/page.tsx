@@ -62,21 +62,20 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-50/80">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-amber-50/70 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gradient-to-tr from-cyan-50/40 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
-        <div className="relative max-w-6xl mx-auto px-6 py-20 lg:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800">
+        <div className="absolute inset-0 hero-pattern" />
+        <div className="relative max-w-6xl mx-auto px-6 py-24 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-700 text-sm mb-8">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-sm mb-8">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                 Free for all 50 states
               </div>
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-navy-950 leading-[1.1] tracking-tight">
+              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight">
                 Know Exactly What
                 <br className="hidden sm:block" /> To Do Next.
               </h1>
-              <p className="mt-6 text-lg lg:text-xl text-slate-600 leading-relaxed max-w-lg">
+              <p className="mt-6 text-lg lg:text-xl text-slate-300 leading-relaxed max-w-lg">
                 Answer a few simple questions and get a personalized roadmap for
                 settling your loved one&apos;s estate. No legal jargon. No expensive
                 retainers. Just clarity.
@@ -101,7 +100,7 @@ export default function Home() {
                     />
                   </svg>
                 </Link>
-                <span className="text-sm text-slate-500">
+                <span className="text-sm text-slate-400">
                   Instant personalized checklist — Takes about 5 minutes
                 </span>
               </div>
@@ -109,12 +108,12 @@ export default function Home() {
 
             {/* Hero visual — product preview checklist */}
             <div className="relative hidden lg:block">
-              <div className="absolute -inset-4 bg-gradient-to-tr from-amber-100/40 via-transparent to-cyan-100/30 rounded-3xl blur-2xl pointer-events-none" />
-              <div className="relative bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200/60 p-8">
+              <div className="absolute -inset-4 bg-gradient-to-tr from-cyan-500/10 via-transparent to-cyan-400/5 rounded-3xl blur-2xl pointer-events-none" />
+              <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl shadow-2xl shadow-black/20 border border-white/10 p-8">
                 <div className="flex gap-1.5 mb-6">
-                  <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
                 </div>
                 <div className="text-sm font-medium text-slate-400 mb-5">Your Estate Roadmap</div>
                 <div className="space-y-4">
@@ -124,7 +123,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                     </div>
-                    <span className="text-sm text-slate-700">Gather essential documents</span>
+                    <span className="text-sm text-slate-200">Gather essential documents</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded bg-cyan-500 flex items-center justify-center shrink-0">
@@ -132,35 +131,35 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                     </div>
-                    <span className="text-sm text-slate-700">Determine probate requirements</span>
+                    <span className="text-sm text-slate-200">Determine probate requirements</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded border-2 border-cyan-400 bg-cyan-50 shrink-0" />
-                    <span className="text-sm text-slate-700 font-medium">File with county probate court</span>
+                    <div className="w-5 h-5 rounded border-2 border-cyan-400 bg-cyan-500/20 shrink-0" />
+                    <span className="text-sm text-white font-medium">File with county probate court</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded border-2 border-slate-200 shrink-0" />
+                    <div className="w-5 h-5 rounded border-2 border-white/20 shrink-0" />
                     <span className="text-sm text-slate-400">Notify creditors &amp; beneficiaries</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded border-2 border-slate-200 shrink-0" />
+                    <div className="w-5 h-5 rounded border-2 border-white/20 shrink-0" />
                     <span className="text-sm text-slate-400">Distribute assets per will</span>
                   </div>
                 </div>
-                <div className="mt-6 pt-5 border-t border-slate-100">
+                <div className="mt-6 pt-5 border-t border-white/10">
                   <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
                     <span>Progress</span>
                     <span>2 of 5 complete</span>
                   </div>
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                     <div className="h-full w-2/5 bg-cyan-500 rounded-full" />
                   </div>
                 </div>
               </div>
-              <div className="absolute -top-3 -right-3 bg-white rounded-xl px-4 py-2.5 shadow-lg border border-slate-200/60">
+              <div className="absolute -top-3 -right-3 bg-navy-800 rounded-xl px-4 py-2.5 shadow-lg border border-white/10">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="text-xs font-medium text-slate-600">Updated for your state</span>
+                  <span className="text-xs font-medium text-slate-300">Updated for your state</span>
                 </div>
               </div>
             </div>
