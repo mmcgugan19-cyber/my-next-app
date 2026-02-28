@@ -12,7 +12,7 @@ const themes = [
   {
     name: 'estate',
     label: 'Modern Estate',
-    primary: '#0c261a',
+    primary: '#023a20',
     accent: '#a06028',
   },
   {

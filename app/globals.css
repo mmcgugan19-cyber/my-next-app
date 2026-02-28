@@ -73,17 +73,17 @@ body {
   --foreground: #1c1a16;
 
   /* Primary: Forest / British Racing Green */
-  --color-navy-950: #061208;
-  --color-navy-900: #0c261a;
-  --color-navy-800: #143826;
-  --color-navy-700: #1c4a33;
-  --color-navy-600: #255c40;
-  --color-navy-500: #2e6f4e;
-  --color-navy-400: #4e9572;
-  --color-navy-300: #7dba9c;
-  --color-navy-200: #b2d8c6;
-  --color-navy-100: #d9ede3;
-  --color-navy-50: #edf6f1;
+  --color-navy-950: #012010;
+  --color-navy-900: #023a20;
+  --color-navy-800: #044d2e;
+  --color-navy-700: #08633c;
+  --color-navy-600: #0e794a;
+  --color-navy-500: #168f58;
+  --color-navy-400: #36ad73;
+  --color-navy-300: #68c89a;
+  --color-navy-200: #a2dec2;
+  --color-navy-100: #d1efe0;
+  --color-navy-50: #eaf8f0;
 
   /* Accent: Copper / Bronze */
   --color-cyan-50: #fdf6f0;
