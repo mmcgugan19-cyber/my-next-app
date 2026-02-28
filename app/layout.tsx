@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IllinoisEstateSettler — Settle an Estate in Illinois",
+  title: "Settle — Navigate Estate Settlement with Confidence",
   description:
-    "Step-by-step guidance for settling an estate in Illinois. Probate, small estate affidavits, asset transfers, and more.",
+    "Step-by-step guidance for settling an estate in all 50 states. Determine your legal path, get personalized action plans, and protect yourself as an executor.",
 };
 
 export default function RootLayout({
