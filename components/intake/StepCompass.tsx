@@ -33,7 +33,7 @@ export default function StepCompass({ data, onUpdate, onNext }: StepProps) {
           <select
             value={data.state}
             onChange={(e) => onUpdate({ state: e.target.value, county: '' })}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-colors"
           >
             <option value="">Select a state...</option>
             {Object.values(STATES)
@@ -48,11 +48,11 @@ export default function StepCompass({ data, onUpdate, onNext }: StepProps) {
 
         {/* State info hint */}
         {selectedState && (
-          <div className="p-4 rounded-xl bg-indigo-50 border border-indigo-100 text-sm text-indigo-800">
+          <div className="p-4 rounded-xl bg-navy-50 border border-navy-100 text-sm text-navy-800">
             <strong>{selectedState.name}</strong> small estate threshold:{' '}
             <strong>${selectedState.smallEstateLimit.toLocaleString()}</strong>
             {selectedState.notes && (
-              <span className="block mt-1 text-indigo-600">{selectedState.notes}</span>
+              <span className="block mt-1 text-navy-600">{selectedState.notes}</span>
             )}
           </div>
         )}
@@ -67,7 +67,7 @@ export default function StepCompass({ data, onUpdate, onNext }: StepProps) {
             value={data.county}
             onChange={(e) => onUpdate({ county: e.target.value })}
             placeholder="e.g., Cook County"
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-colors"
           />
         </div>
 
@@ -81,7 +81,7 @@ export default function StepCompass({ data, onUpdate, onNext }: StepProps) {
             value={data.dateOfDeath}
             onChange={(e) => onUpdate({ dateOfDeath: e.target.value })}
             max={new Date().toISOString().split('T')[0]}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-colors"
           />
         </div>
       </div>

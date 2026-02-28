@@ -12,7 +12,7 @@ export default function ProgressBar({ currentStep, totalSteps, labels }: Progres
         <div className="absolute left-0 right-0 top-4 h-0.5 bg-slate-200" />
         {/* Filled connector line */}
         <div
-          className="absolute left-0 top-4 h-0.5 bg-indigo-600 transition-all duration-500 ease-out"
+          className="absolute left-0 top-4 h-0.5 bg-cyan-600 transition-all duration-500 ease-out"
           style={{ width: currentStep === 0 ? '0%' : `${(currentStep / (totalSteps - 1)) * 100}%` }}
         />
 
@@ -21,9 +21,9 @@ export default function ProgressBar({ currentStep, totalSteps, labels }: Progres
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium z-10 transition-all duration-300 ${
                 i < currentStep
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-cyan-600 text-white'
                   : i === currentStep
-                    ? 'bg-indigo-600 text-white ring-4 ring-indigo-100'
+                    ? 'bg-cyan-600 text-white ring-4 ring-cyan-100'
                     : 'bg-white text-slate-400 border-2 border-slate-200'
               }`}
             >
@@ -37,7 +37,7 @@ export default function ProgressBar({ currentStep, totalSteps, labels }: Progres
             </div>
             <span
               className={`text-xs mt-2 whitespace-nowrap hidden sm:block transition-colors ${
-                i <= currentStep ? 'text-indigo-600 font-medium' : 'text-slate-400'
+                i <= currentStep ? 'text-cyan-600 font-medium' : 'text-slate-400'
               }`}
             >
               {label}

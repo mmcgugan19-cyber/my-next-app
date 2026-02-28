@@ -203,7 +203,7 @@ export default function StrategyReport({ data, onStartOver }: ReportProps) {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-sm font-medium mb-4">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-50 border border-cyan-100 text-cyan-700 text-sm font-medium mb-4">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -275,17 +275,17 @@ export default function StrategyReport({ data, onStartOver }: ReportProps) {
 
       {/* First Deadline */}
       {result.firstDeadline && (
-        <div className="p-5 rounded-2xl bg-indigo-50 border border-indigo-200">
+        <div className="p-5 rounded-2xl bg-navy-50 border border-navy-200">
           <div className="flex items-start gap-4">
-            <div className="shrink-0 w-14 h-14 rounded-xl bg-indigo-600 text-white flex flex-col items-center justify-center">
+            <div className="shrink-0 w-14 h-14 rounded-xl bg-navy-800 text-white flex flex-col items-center justify-center">
               <span className="text-xl font-bold leading-none">
                 {result.firstDeadline.daysRemaining}
               </span>
               <span className="text-[10px] uppercase tracking-wide">days</span>
             </div>
             <div>
-              <p className="font-semibold text-indigo-900">{result.firstDeadline.task}</p>
-              <p className="text-sm text-indigo-700 mt-1">
+              <p className="font-semibold text-navy-900">{result.firstDeadline.task}</p>
+              <p className="text-sm text-navy-700 mt-1">
                 Due by {result.firstDeadline.dueDate}
                 {result.firstDeadline.daysRemaining > 0
                   ? ` — ${result.firstDeadline.daysRemaining} days remaining`
@@ -320,7 +320,7 @@ export default function StrategyReport({ data, onStartOver }: ReportProps) {
       {/* Immediate Actions */}
       <div>
         <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
+          <span className="w-2.5 h-2.5 rounded-full bg-cyan-500" />
           Week 1 — First Steps
         </h3>
         <div className="space-y-2">
@@ -329,7 +329,7 @@ export default function StrategyReport({ data, onStartOver }: ReportProps) {
               key={i}
               className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100"
             >
-              <span className="shrink-0 w-5 h-5 rounded-full border-2 border-indigo-300 mt-0.5" />
+              <span className="shrink-0 w-5 h-5 rounded-full border-2 border-cyan-300 mt-0.5" />
               <p className="text-sm text-slate-700">{action}</p>
             </div>
           ))}

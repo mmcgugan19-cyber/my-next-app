@@ -18,7 +18,7 @@ export default function RadioCard({ label, description, value, onChange }: Radio
           onClick={() => onChange(true)}
           className={`flex-1 py-3 px-4 rounded-xl border-2 font-medium transition-all ${
             value === true
-              ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+              ? 'border-cyan-600 bg-cyan-50 text-cyan-700'
               : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
           }`}
         >
@@ -29,7 +29,7 @@ export default function RadioCard({ label, description, value, onChange }: Radio
           onClick={() => onChange(false)}
           className={`flex-1 py-3 px-4 rounded-xl border-2 font-medium transition-all ${
             value === false
-              ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+              ? 'border-cyan-600 bg-cyan-50 text-cyan-700'
               : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
           }`}
         >

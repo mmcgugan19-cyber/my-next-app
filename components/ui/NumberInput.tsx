@@ -24,7 +24,7 @@ export default function NumberInput({ label, description, value, onChange }: Num
           inputMode="numeric"
           value={formatted}
           onChange={handleChange}
-          className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
+          className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-colors"
           placeholder="0"
         />
       </div>

@@ -45,10 +45,10 @@ export default function IntakePage() {
       <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-3xl mx-auto flex items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center">
-              <span className="text-white font-bold text-xs">S</span>
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-navy-800 to-navy-900 flex items-center justify-center">
+              <span className="text-white font-bold text-xs">E</span>
             </div>
-            <span className="font-semibold text-slate-900">Settle</span>
+            <span className="font-semibold text-slate-900">EstateIQ</span>
           </Link>
           <Link
             href="/"

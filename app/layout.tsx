@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Settle — Navigate Estate Settlement with Confidence",
+  title: "EstateIQ — Navigate Estate Settlement with Confidence",
   description:
     "Step-by-step guidance for settling an estate in all 50 states. Determine your legal path, get personalized action plans, and protect yourself as an executor.",
 };

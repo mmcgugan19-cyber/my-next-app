@@ -51,10 +51,10 @@ export default function Home() {
       <nav className="border-b border-slate-200/60 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center shadow-sm">
-              <span className="text-white font-bold text-sm">S</span>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-navy-800 to-navy-900 flex items-center justify-center shadow-sm">
+              <span className="text-white font-bold text-sm">E</span>
             </div>
-            <span className="font-semibold text-lg tracking-tight">Settle</span>
+            <span className="font-semibold text-lg tracking-tight">EstateIQ</span>
           </Link>
           <div className="flex items-center gap-8">
             <Link
@@ -71,7 +71,7 @@ export default function Home() {
             </Link>
             <Link
               href="/intake"
-              className="text-sm font-medium bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+              className="text-sm font-medium bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors shadow-sm"
             >
               Start Free Assessment
             </Link>
@@ -80,17 +80,17 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950">
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800">
         <div className="absolute inset-0 hero-pattern" />
         <div className="relative max-w-6xl mx-auto px-6 py-24 lg:py-32">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 text-sm mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-sm mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               Free for all 50 states
             </div>
             <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight">
               Navigate Estate Settlement
-              <span className="text-indigo-400"> with Confidence</span>
+              <span className="text-cyan-400"> with Confidence</span>
             </h1>
             <p className="mt-6 text-lg lg:text-xl text-slate-300 leading-relaxed max-w-2xl">
               Answer a few simple questions and get a personalized roadmap for
@@ -100,7 +100,7 @@ export default function Home() {
             <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
                 href="/intake"
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-indigo-600 text-white font-semibold text-lg hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/25 hover:shadow-indigo-500/30"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-cyan-600 text-white font-semibold text-lg hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-600/25 hover:shadow-cyan-500/30"
               >
                 Start Your Free Assessment
                 <svg
@@ -138,7 +138,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
             <div className="relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200/60">
-              <div className="w-11 h-11 rounded-xl bg-indigo-600 text-white font-bold text-lg flex items-center justify-center mb-5 shadow-sm">
+              <div className="w-11 h-11 rounded-xl bg-navy-800 text-white font-bold text-lg flex items-center justify-center mb-5 shadow-sm">
                 1
               </div>
               <h3 className="text-xl font-semibold mb-3">Answer Simple Questions</h3>
@@ -148,7 +148,7 @@ export default function Home() {
               </p>
             </div>
             <div className="relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200/60">
-              <div className="w-11 h-11 rounded-xl bg-indigo-600 text-white font-bold text-lg flex items-center justify-center mb-5 shadow-sm">
+              <div className="w-11 h-11 rounded-xl bg-navy-800 text-white font-bold text-lg flex items-center justify-center mb-5 shadow-sm">
                 2
               </div>
               <h3 className="text-xl font-semibold mb-3">Get Your Legal Path</h3>
@@ -158,7 +158,7 @@ export default function Home() {
               </p>
             </div>
             <div className="relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200/60">
-              <div className="w-11 h-11 rounded-xl bg-indigo-600 text-white font-bold text-lg flex items-center justify-center mb-5 shadow-sm">
+              <div className="w-11 h-11 rounded-xl bg-navy-800 text-white font-bold text-lg flex items-center justify-center mb-5 shadow-sm">
                 3
               </div>
               <h3 className="text-xl font-semibold mb-3">Follow Your Roadmap</h3>
@@ -176,7 +176,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold tracking-tight">
-              Why Executors Choose Settle
+              Why Executors Choose EstateIQ
             </h2>
             <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
               Built by people who&apos;ve been through it, for people going
@@ -187,9 +187,9 @@ export default function Home() {
             {features.map((f) => (
               <div
                 key={f.title}
-                className="flex gap-5 p-6 lg:p-8 rounded-2xl border border-slate-200/60 hover:border-indigo-200 hover:shadow-sm transition-all"
+                className="flex gap-5 p-6 lg:p-8 rounded-2xl border border-slate-200/60 hover:border-cyan-200 hover:shadow-sm transition-all"
               >
-                <div className="shrink-0 w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <div className="shrink-0 w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center">
                   {f.icon}
                 </div>
                 <div>
@@ -203,7 +203,7 @@ export default function Home() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950">
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800">
         <div className="absolute inset-0 hero-pattern" />
         <div className="relative max-w-3xl mx-auto px-6 py-20 lg:py-28 text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">
@@ -241,10 +241,10 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between gap-8">
             <div>
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center shadow-sm">
-                  <span className="text-white font-bold text-sm">S</span>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-navy-800 to-navy-900 flex items-center justify-center shadow-sm">
+                  <span className="text-white font-bold text-sm">E</span>
                 </div>
-                <span className="font-semibold text-lg tracking-tight">Settle</span>
+                <span className="font-semibold text-lg tracking-tight">EstateIQ</span>
               </div>
               <p className="text-sm text-slate-500 max-w-xs leading-relaxed">
                 Step-by-step estate settlement guidance for executors in all 50
@@ -279,7 +279,7 @@ export default function Home() {
               for your specific situation.
             </p>
             <p className="text-center text-xs text-slate-400 mt-2">
-              &copy; {new Date().getFullYear()} Settle. All rights reserved.
+              &copy; {new Date().getFullYear()} EstateIQ. All rights reserved.
             </p>
           </div>
         </div>
