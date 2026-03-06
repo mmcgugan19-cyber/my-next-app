@@ -4,42 +4,72 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
+import { STATES } from '@/data/states'
+import type { Estate } from '@/types/dashboard'
+import Pulse from '@/components/dashboard/Pulse'
+import PillarCard from '@/components/dashboard/PillarCard'
 
-interface Task {
-  text: string
-  completed: boolean
+interface PillarStats {
+  assetCount: number
+  assetsResolved: number
+  debtCount: number
+  debtsResolved: number
+  beneficiaryCount: number
+  beneficiariesAssigned: number
+  documentCount: number
+  documentsObtained: number
 }
 
-interface Estate {
-  id: string
-  state_of_residence: string
-  county: string | null
-  total_value: number
-  legal_path: string
-  executor_role: string
-  has_will: boolean
-  risk_level: string
-  urgent_tasks: Task[]
-  immediate_tasks: Task[]
-  short_term_tasks: Task[]
-  long_term_tasks: Task[]
+function computeProgress(estate: Estate, stats: PillarStats): number {
+  let progress = 3
+
+  const legal = estate.legal_authority || {}
+  const skipWill = !estate.has_will
+  const skipLetters = estate.legal_path === 'no-probate'
+
+  if (legal.will_located || skipWill) progress += 5
+  if (legal.will_filed || skipWill || skipLetters) progress += 5
+  if (legal.letters_applied || skipLetters) progress += 7
+  if (legal.letters_received || skipLetters) progress += 8
+
+  if (stats.assetCount > 0) {
+    progress += 7
+    progress += Math.round((stats.assetsResolved / stats.assetCount) * 15)
+  }
+
+  if (stats.debtCount > 0) {
+    progress += 7
+    progress += Math.round((stats.debtsResolved / stats.debtCount) * 15)
+  }
+
+  if (stats.beneficiaryCount > 0) {
+    progress += 6
+    progress += Math.round((stats.beneficiariesAssigned / stats.beneficiaryCount) * 10)
+  }
+
+  if (stats.documentCount > 0) {
+    progress += 4
+    progress += Math.round((stats.documentsObtained / stats.documentCount) * 8)
+  }
+
+  return Math.min(progress, 100)
 }
 
 export default function DashboardPage() {
   const router = useRouter()
   const [estate, setEstate] = useState<Estate | null>(null)
+  const [stats, setStats] = useState<PillarStats>({
+    assetCount: 0, assetsResolved: 0,
+    debtCount: 0, debtsResolved: 0,
+    beneficiaryCount: 0, beneficiariesAssigned: 0,
+    documentCount: 0, documentsObtained: 0,
+  })
   const [loading, setLoading] = useState(true)
-  const [userName, setUserName] = useState('')
 
   useEffect(() => {
     async function loadData() {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        router.push('/intake')
-        return
-      }
-
-      setUserName(user.user_metadata?.first_name || 'there')
+      if (!user) return
 
       const { data: estates } = await supabase
         .from('estates')
@@ -48,268 +78,217 @@ export default function DashboardPage() {
         .order('created_at', { ascending: false })
         .limit(1)
 
-      if (estates && estates.length > 0) {
-        setEstate(estates[0])
+      if (!estates?.length) {
+        setLoading(false)
+        return
       }
+
+      const est = estates[0] as Estate
+      setEstate(est)
+
+      const [
+        { data: assets },
+        { data: debts },
+        { data: beneficiaries },
+        { data: documents },
+      ] = await Promise.all([
+        supabase.from('assets').select('id, status').eq('estate_id', est.id),
+        supabase.from('debts').select('id, status').eq('estate_id', est.id),
+        supabase.from('beneficiaries').select('id, share_percentage, share_description').eq('estate_id', est.id),
+        supabase.from('documents').select('id, status').eq('estate_id', est.id),
+      ])
+
+      setStats({
+        assetCount: assets?.length ?? 0,
+        assetsResolved: assets?.filter(a => ['transferred', 'closed'].includes(a.status)).length ?? 0,
+        debtCount: debts?.length ?? 0,
+        debtsResolved: debts?.filter(d => ['paid', 'forgiven'].includes(d.status)).length ?? 0,
+        beneficiaryCount: beneficiaries?.length ?? 0,
+        beneficiariesAssigned: beneficiaries?.filter(b => b.share_percentage != null || b.share_description).length ?? 0,
+        documentCount: documents?.length ?? 0,
+        documentsObtained: documents?.filter(d => ['obtained', 'filed'].includes(d.status)).length ?? 0,
+      })
 
       setLoading(false)
     }
 
     loadData()
-  }, [router])
+  }, [])
 
-  const toggleTask = useCallback(async (
-    category: 'urgent_tasks' | 'immediate_tasks' | 'short_term_tasks' | 'long_term_tasks',
-    index: number
-  ) => {
+  const toggleUrgentTask = useCallback(async (index: number) => {
     if (!estate) return
-
-    const tasks = [...estate[category]]
+    const tasks = [...estate.urgent_tasks]
     tasks[index] = { ...tasks[index], completed: !tasks[index].completed }
-
-    setEstate((prev) => prev ? { ...prev, [category]: tasks } : prev)
-
-    await supabase
-      .from('estates')
-      .update({ [category]: tasks })
-      .eq('id', estate.id)
+    setEstate(prev => prev ? { ...prev, urgent_tasks: tasks } : prev)
+    await supabase.from('estates').update({ urgent_tasks: tasks }).eq('id', estate.id)
   }, [estate])
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="flex items-center gap-3 text-slate-500">
-          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          Loading your dashboard...
-        </div>
-      </div>
-    )
-  }
+  if (loading) return null // layout shows spinner
 
   if (!estate) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <p className="text-slate-600">No estate data found.</p>
-          <Link
-            href="/intake"
-            className="inline-flex items-center justify-center rounded-xl bg-cyan-600 text-white font-medium px-6 py-3 hover:bg-cyan-700 transition-all"
-          >
-            Start Assessment
-          </Link>
-        </div>
+      <div className="max-w-3xl mx-auto px-6 py-16 text-center space-y-4">
+        <p className="text-slate-600">No estate data found. Complete your initial assessment first.</p>
+        <Link
+          href="/intake"
+          className="inline-flex items-center justify-center rounded-xl bg-cyan-600 text-white font-medium px-6 py-3 hover:bg-cyan-700 transition-all"
+        >
+          Start Assessment
+        </Link>
       </div>
     )
   }
 
-  const pathLabel: Record<string, string> = {
-    'no-probate': 'Probate Likely Not Required',
-    'small-estate': 'Small Estate Affidavit',
-    'formal-probate': 'Formal Probate',
-  }
+  const progress = computeProgress(estate, stats)
+  const stateAbbr = (estate.intake_data?.state as string) || ''
+  const stateName = stateAbbr ? STATES[stateAbbr]?.name || estate.state_of_residence : estate.state_of_residence
 
-  function completedCount(tasks: Task[]) {
-    return tasks.filter((t) => t.completed).length
-  }
+  const legalStatus = (() => {
+    const l = estate.legal_authority || {}
+    if (l.letters_received) return 'Authority established'
+    if (l.letters_applied) return 'Letters applied for'
+    if (l.will_filed) return 'Will filed'
+    if (l.will_located) return 'Will located'
+    return 'Not started'
+  })()
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-3xl mx-auto flex items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-navy-800 to-navy-900 flex items-center justify-center">
-              <span className="text-white font-bold text-xs">E</span>
-            </div>
-            <span className="font-semibold text-slate-900">EstateIQ</span>
-          </Link>
-          <button
-            onClick={async () => {
-              await supabase.auth.signOut()
-              router.push('/')
-            }}
-            className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
-          >
-            Sign Out
-          </button>
-        </div>
-      </header>
+    <div className="max-w-3xl mx-auto w-full px-6 py-8 space-y-8 animate-fade-in-up">
+      {/* Welcome */}
+      <div>
+        <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">
+          Your Estate Dashboard
+        </h1>
+        <p className="mt-1 text-slate-600">
+          Estate settlement for {stateName}
+          {estate.county ? `, ${estate.county} County` : ''}
+        </p>
+      </div>
 
-      <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-10 space-y-8">
-        {/* Welcome */}
+      {/* Pulse */}
+      <Pulse estate={estate} progress={progress} />
+
+      {/* Urgent Actions */}
+      {estate.urgent_tasks.length > 0 && (
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">
-            Welcome back, {userName}
-          </h1>
-          <p className="mt-2 text-slate-600">
-            Here&apos;s your estate settlement checklist for {estate.state_of_residence}.
-          </p>
-        </div>
-
-        {/* Overview Cards */}
-        <div className="grid sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-2xl border border-slate-200 bg-white">
-            <p className="text-xs font-medium text-slate-500 mb-1">Estate Value</p>
-            <p className="text-lg font-bold text-slate-900">
-              ${estate.total_value.toLocaleString()}
-            </p>
+          <h3 className="text-lg font-bold text-red-800 mb-3 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+            Urgent Actions
+          </h3>
+          <div className="space-y-2">
+            {estate.urgent_tasks.map((task, i) => (
+              <label
+                key={i}
+                className="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100 cursor-pointer group transition-all hover:shadow-sm"
+              >
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleUrgentTask(i)}
+                  className="peer sr-only"
+                />
+                <span className={`shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all border-red-300 ${task.completed ? 'bg-red-500 border-red-500' : ''}`}>
+                  {task.completed && (
+                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </span>
+                <p className={`text-sm text-red-900 ${task.completed ? 'line-through opacity-60' : ''}`}>
+                  {task.text}
+                </p>
+              </label>
+            ))}
           </div>
-          <div className="p-4 rounded-2xl border border-slate-200 bg-white">
-            <p className="text-xs font-medium text-slate-500 mb-1">Legal Path</p>
-            <p className="text-lg font-bold text-slate-900">
-              {pathLabel[estate.legal_path] ?? estate.legal_path}
-            </p>
-          </div>
-          <div className="p-4 rounded-2xl border border-slate-200 bg-white">
-            <p className="text-xs font-medium text-slate-500 mb-1">Your Role</p>
-            <p className="text-lg font-bold text-slate-900 capitalize">{estate.executor_role}</p>
-          </div>
         </div>
+      )}
 
-        {/* Urgent Tasks */}
-        {estate.urgent_tasks.length > 0 && (
-          <TaskSection
-            title="Urgent — Do Today"
-            dotColor="bg-red-500"
-            titleColor="text-red-800"
-            cardBg="bg-red-50"
-            cardBorder="border-red-100"
-            checkColor="border-red-300 peer-checked:bg-red-500 peer-checked:border-red-500"
-            textColor="text-red-900"
-            tasks={estate.urgent_tasks}
-            completed={completedCount(estate.urgent_tasks)}
-            onToggle={(i) => toggleTask('urgent_tasks', i)}
+      {/* Action Pillars */}
+      <div>
+        <h2 className="text-lg font-bold text-slate-900 mb-4">Action Pillars</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <PillarCard
+            title="Legal Authority"
+            description="Establish your legal right to act on behalf of the estate"
+            href="/dashboard/legal"
+            started={legalStatus !== 'Not started'}
+            status={legalStatus}
+            icon={
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 6l9-3 9 3-9 3-9-3zm0 0v6m18-6v6M6 9v6c0 1.5 2.7 3 6 3s6-1.5 6-3V9" />
+              </svg>
+            }
           />
-        )}
-
-        {/* Immediate Tasks */}
-        {estate.immediate_tasks.length > 0 && (
-          <TaskSection
-            title="Week 1 — First Steps"
-            dotColor="bg-cyan-500"
-            titleColor="text-slate-900"
-            cardBg="bg-slate-50"
-            cardBorder="border-slate-100"
-            checkColor="border-cyan-300 peer-checked:bg-cyan-500 peer-checked:border-cyan-500"
-            textColor="text-slate-700"
-            tasks={estate.immediate_tasks}
-            completed={completedCount(estate.immediate_tasks)}
-            onToggle={(i) => toggleTask('immediate_tasks', i)}
+          <PillarCard
+            title="The Inventory"
+            description="Catalog and track all estate assets across categories"
+            href="/dashboard/inventory"
+            started={stats.assetCount > 0}
+            status={stats.assetCount > 0 ? `${stats.assetCount} asset${stats.assetCount !== 1 ? 's' : ''} tracked` : 'Not started'}
+            icon={
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+            }
           />
-        )}
-
-        {/* Short-term Tasks */}
-        {estate.short_term_tasks.length > 0 && (
-          <TaskSection
-            title="Month 1 — Build the Foundation"
-            dotColor="bg-slate-400"
-            titleColor="text-slate-900"
-            cardBg="bg-slate-50"
-            cardBorder="border-slate-100"
-            checkColor="border-slate-300 peer-checked:bg-slate-500 peer-checked:border-slate-500"
-            textColor="text-slate-700"
-            tasks={estate.short_term_tasks}
-            completed={completedCount(estate.short_term_tasks)}
-            onToggle={(i) => toggleTask('short_term_tasks', i)}
+          <PillarCard
+            title="The Debt Desk"
+            description="Track and resolve funeral expenses, medical bills, and debts"
+            href="/dashboard/debts"
+            started={stats.debtCount > 0}
+            status={stats.debtCount > 0 ? `${stats.debtCount} debt${stats.debtCount !== 1 ? 's' : ''} tracked` : 'Not started'}
+            icon={
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            }
           />
-        )}
-
-        {/* Long-term Tasks */}
-        {estate.long_term_tasks.length > 0 && (
-          <TaskSection
-            title="Months 2–12 — Complete the Process"
-            dotColor="bg-slate-300"
-            titleColor="text-slate-900"
-            cardBg="bg-slate-50"
-            cardBorder="border-slate-100"
-            checkColor="border-slate-200 peer-checked:bg-slate-400 peer-checked:border-slate-400"
-            textColor="text-slate-700"
-            tasks={estate.long_term_tasks}
-            completed={completedCount(estate.long_term_tasks)}
-            onToggle={(i) => toggleTask('long_term_tasks', i)}
+          <PillarCard
+            title="Distribution Planner"
+            description="Identify beneficiaries and plan asset distribution"
+            href="/dashboard/distribution"
+            started={stats.beneficiaryCount > 0}
+            status={stats.beneficiaryCount > 0 ? `${stats.beneficiaryCount} beneficiar${stats.beneficiaryCount !== 1 ? 'ies' : 'y'} listed` : 'Not started'}
+            icon={
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            }
           />
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-100 bg-white">
-        <div className="max-w-3xl mx-auto px-6 py-4 text-center text-xs text-slate-400">
-          This tool provides general guidance only. It is not a substitute for legal, tax, or
-          financial advice.
         </div>
-      </footer>
-    </div>
-  )
-}
-
-/* ---- Task Section Component ---- */
-
-interface TaskSectionProps {
-  title: string
-  dotColor: string
-  titleColor: string
-  cardBg: string
-  cardBorder: string
-  checkColor: string
-  textColor: string
-  tasks: Task[]
-  completed: number
-  onToggle: (index: number) => void
-}
-
-function TaskSection({
-  title,
-  dotColor,
-  titleColor,
-  cardBg,
-  cardBorder,
-  checkColor,
-  textColor,
-  tasks,
-  completed,
-  onToggle,
-}: TaskSectionProps) {
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className={`text-lg font-bold ${titleColor} flex items-center gap-2`}>
-          <span className={`w-2.5 h-2.5 rounded-full ${dotColor}`} />
-          {title}
-        </h3>
-        <span className="text-sm text-slate-500">
-          {completed}/{tasks.length}
-        </span>
       </div>
-      <div className="space-y-2">
-        {tasks.map((task, i) => (
-          <label
-            key={i}
-            className={`flex items-start gap-3 p-4 rounded-xl ${cardBg} border ${cardBorder} cursor-pointer group transition-all hover:shadow-sm`}
+
+      {/* Document Locker */}
+      <Link
+        href="/dashboard/locker"
+        className="block p-5 rounded-2xl border border-slate-200 bg-white hover:border-cyan-300 hover:shadow-md transition-all group"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-navy-50 text-navy-600 flex items-center justify-center">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-900">Document Locker</h3>
+              <p className="text-sm text-slate-500">
+                {stats.documentCount > 0
+                  ? `${stats.documentsObtained} of ${stats.documentCount} documents obtained`
+                  : 'Track death certificates, deeds, court filings, and more'}
+              </p>
+            </div>
+          </div>
+          <svg
+            className="w-5 h-5 text-slate-300 group-hover:text-cyan-500 transition-colors"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => onToggle(i)}
-              className="peer sr-only"
-            />
-            <span
-              className={`shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all ${checkColor}`}
-            >
-              {task.completed && (
-                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              )}
-            </span>
-            <p className={`text-sm ${textColor} ${task.completed ? 'line-through opacity-60' : ''}`}>
-              {task.text}
-            </p>
-          </label>
-        ))}
-      </div>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </Link>
     </div>
   )
 }
