@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EstateIQ — Small Estate Settlement Flow</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f1419;
+    color: #e8eaed;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    padding: 40px 20px 80px;
+    min-height: 100vh;
+  }
+
+  .flow-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Section labels */
+  .section-label {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8b949e;
+    margin: 50px 0 20px;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* Boxes */
+  .box {
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .box-phase {
+    background: linear-gradient(135deg, #1a3a2a 0%, #1e4d35 100%);
+    border: 1px solid #2d6b47;
+    max-width: 720px;
+  }
+  .box-branch {
+    background: linear-gradient(135deg, #1a2a3a 0%, #1e3550 100%);
+    border: 1px solid #2d5a8b;
+    max-width: 720px;
+  }
+  .box-track {
+    background: linear-gradient(135deg, #1a2a3a 0%, #1e3550 100%);
+    border: 1px solid #2d5a8b;
+    max-width: 320px;
+    flex: 1;
+    min-width: 240px;
+  }
+  .box-alert {
+    background: linear-gradient(135deg, #3a2a1a 0%, #4d3520 100%);
+    border: 1px solid #8b5a2d;
+    max-width: 720px;
+  }
+  .box-gate {
+    background: linear-gradient(135deg, #2a1a3a 0%, #3d2050 100%);
+    border: 1px solid #6b2d8b;
+    max-width: 520px;
+  }
+
+  .box h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  .box .subtitle {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 12px;
+  }
+  .box .detail {
+    font-size: 13px;
+    color: #c9d1d9;
+    line-height: 1.6;
+  }
+  .box .detail strong { color: #fff; }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+  }
+  .checklist li {
+    font-size: 13px;
+    color: #c9d1d9;
+    padding: 3px 0 3px 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .checklist li::before {
+    content: '☐';
+    position: absolute;
+    left: 0;
+    color: #6b7280;
+  }
+
+  .data-tag {
+    display: inline-block;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #7dd3fc;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 4px 2px 0;
+  }
+  .branch-tag {
+    display: inline-block;
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: #fcd34d;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .alert-tag {
+    display: inline-block;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .gate-tag {
+    display: inline-block;
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    color: #c4b5fd;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  /* Connectors */
+  .connector {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+  }
+  .connector .line {
+    width: 2px;
+    height: 28px;
+    background: #374151;
+  }
+
+  /* Side-by-side layouts */
+  .split {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .split > .box { flex: 1; min-width: 280px; }
+
+  .quad {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .quad > .box { min-width: 200px; }
+
+  /* Fork connectors */
+  .fork-down {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 8px 0;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .fork-down::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 14px;
+    background: #374151;
+    transform: translateX(-50%);
+  }
+  .fork-down::after {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: calc(25% + 5px);
+    right: calc(25% + 5px);
+    height: 2px;
+    background: #374151;
+  }
+  .fork-arm {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .fork-arm .line {
+    width: 2px;
+    height: 22px;
+    background: #374151;
+    margin-top: 14px;
+  }
+
+  .fork-down-4 {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 8px 0;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .fork-down-4::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 14px;
+    background: #374151;
+    transform: translateX(-50%);
+  }
+  .fork-down-4::after {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: calc(12.5% + 8px);
+    right: calc(12.5% + 8px);
+    height: 2px;
+    background: #374151;
+  }
+  .fork-down-4 .fork-arm .line {
+    margin-top: 14px;
+  }
+
+  /* Merge connector */
+  .merge-up {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 8px 0;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .merge-up::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    height: 14px;
+    background: #374151;
+    transform: translateX(-50%);
+  }
+  .merge-up::after {
+    content: '';
+    position: absolute;
+    bottom: 14px;
+    left: calc(25% + 5px);
+    right: calc(25% + 5px);
+    height: 2px;
+    background: #374151;
+  }
+  .merge-up .fork-arm .line {
+    width: 2px;
+    height: 22px;
+    background: #374151;
+    margin-bottom: 14px;
+  }
+
+  .merge-up-4 {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 8px 0;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .merge-up-4::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    height: 14px;
+    background: #374151;
+    transform: translateX(-50%);
+  }
+  .merge-up-4::after {
+    content: '';
+    position: absolute;
+    bottom: 14px;
+    left: calc(12.5% + 8px);
+    right: calc(12.5% + 8px);
+    height: 2px;
+    background: #374151;
+  }
+  .merge-up-4 .fork-arm .line {
+    margin-bottom: 14px;
+  }
+
+  /* Title area */
+  .page-title {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .page-title h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .page-title p {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 6px;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 20px 0 30px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+  }
+  .swatch-phase { background: #1e4d35; border: 1px solid #2d6b47; }
+  .swatch-branch { background: #1e3550; border: 1px solid #2d5a8b; }
+  .swatch-alert { background: #4d3520; border: 1px solid #8b5a2d; }
+  .swatch-gate { background: #3d2050; border: 1px solid #6b2d8b; }
+
+  .conditional-note {
+    text-align: center;
+    font-size: 11px;
+    color: #f59e0b;
+    font-style: italic;
+    margin: 4px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="flow-container">
+
+  <!-- TITLE -->
+  <div class="page-title">
+    <h1>Small Estate Settlement Flow</h1>
+    <p>Post-intake guided experience — when estate qualifies for small estate affidavit</p>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch swatch-phase"></div> Process Phase</div>
+    <div class="legend-item"><div class="legend-swatch swatch-branch"></div> Branching Decision</div>
+    <div class="legend-item"><div class="legend-swatch swatch-alert"></div> Alert / Redirect</div>
+    <div class="legend-item"><div class="legend-swatch swatch-gate"></div> Gate / Prerequisite</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Intake Complete — Strategy Report Shows "Small Estate"</div>
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="box box-phase">
+    <h3>Phase 0 — Secure & Stabilize</h3>
+    <div class="subtitle">Day 1 · Conditional — only if safety flags were raised in intake</div>
+    <ul class="checklist">
+      <li>Secure vacant property — change locks, notify insurance</li>
+      <li>Arrange pet care, remove perishable items</li>
+      <li>Move vehicles to private parking</li>
+    </ul>
+    <div class="conditional-note">Each task only appears if the corresponding intake flag is true</div>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Phase 1 — Gather Essentials</div>
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="box box-phase">
+    <h3>Phase 1 — Gather Essentials</h3>
+    <div class="subtitle">Week 1 · Get the foundational documents</div>
+    <ul class="checklist">
+      <li>Order 10–15 certified copies of the death certificate</li>
+      <li>Locate original will (if exists)</li>
+      <li>Notify Social Security Administration</li>
+      <li>Notify employer / pension providers</li>
+    </ul>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <!-- Branch: Will Filing Deadline -->
+  <div class="box box-branch">
+    <span class="branch-tag">BRANCHING POINT</span>
+    <h3>Does the state have a will filing deadline?</h3>
+    <div class="detail">
+      Some states require the will to be filed within <strong>10–30 days</strong> of death — before the small estate waiting period ends.
+    </div>
+  </div>
+
+  <div class="fork-down">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <div class="split">
+    <div class="box box-alert">
+      <span class="alert-tag">DEADLINE EXISTS</span>
+      <h3>File Will Immediately</h3>
+      <div class="detail">
+        File will with <strong>[County] Probate Court</strong> by the state-mandated deadline.
+        <br><br>
+        <span class="data-tag">Collect: filing confirmation</span>
+        <span class="data-tag">Collect: filing date</span>
+      </div>
+    </div>
+    <div class="box box-phase">
+      <h3>No Deadline / No Will</h3>
+      <div class="detail">
+        Will filing deferred to Phase 3 preparation. Continue gathering documents.
+      </div>
+    </div>
+  </div>
+
+  <div class="merge-up">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Phase 2 — Document & Value (During Waiting Period)</div>
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="box box-gate">
+    <span class="gate-tag">GATE</span>
+    <h3>Waiting Period Active</h3>
+    <div class="detail">
+      Most states require <strong>30–45 days</strong> after death before an affidavit can be filed. Use this time to gather detailed documentation.
+    </div>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <div class="box box-phase">
+    <h3>Phase 2 — Document & Value</h3>
+    <div class="subtitle">Weeks 1–4 · Build the complete estate picture</div>
+    <div class="detail" style="margin-bottom: 10px;">
+      <strong>New data to collect</strong> (beyond intake estimates):
+    </div>
+    <div style="margin-bottom: 8px;">
+      <span class="data-tag">Bank account details (institution, balance)</span>
+      <span class="data-tag">Vehicle details (VIN, title, value)</span>
+      <span class="data-tag">Real estate details (address, mortgage)</span>
+      <span class="data-tag">Complete debt inventory</span>
+      <span class="data-tag">Beneficiary / heir registry</span>
+    </div>
+    <ul class="checklist">
+      <li>Gather statements for all sole-owned accounts</li>
+      <li>Locate vehicle titles</li>
+      <li>Pull property deed (if applicable)</li>
+      <li>Compile complete list of debts and creditors</li>
+      <li>Identify and contact all beneficiaries/heirs</li>
+      <li><strong>Recalculate total estate value with real numbers</strong></li>
+    </ul>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <!-- Branch: Value Recheck -->
+  <div class="box box-branch">
+    <span class="branch-tag">CRITICAL BRANCHING POINT</span>
+    <h3>Value Recheck — Does estate still qualify?</h3>
+    <div class="detail">
+      Intake used <strong>estimates</strong>. Real documentation may reveal a different picture. Recalculate total against state threshold.
+    </div>
+  </div>
+
+  <div class="fork-down">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <div class="split">
+    <div class="box box-alert">
+      <span class="alert-tag">EXCEEDS THRESHOLD</span>
+      <h3>Redirect to Formal Probate</h3>
+      <div class="detail">
+        Updated value exceeds state's small estate limit. User is guided to the <strong>formal probate flow</strong> instead.
+      </div>
+    </div>
+    <div class="box box-phase">
+      <h3>Still Qualifies</h3>
+      <div class="detail">
+        Total value confirmed under threshold. Proceed to affidavit preparation.
+      </div>
+    </div>
+  </div>
+
+  <div class="merge-up">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Phase 3 — Prepare the Affidavit</div>
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="box box-gate">
+    <span class="gate-tag">GATE</span>
+    <h3>Waiting Period Elapsed + Phase 2 Complete</h3>
+    <div class="detail">
+      State-mandated waiting period has passed. All asset details, debts, and heirs documented.
+    </div>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <div class="box box-branch">
+    <span class="branch-tag">MAJOR BRANCHING POINT</span>
+    <h3>Does the state require court filing?</h3>
+    <div class="detail">
+      Some states let you handle everything out-of-court. Others require filing with the probate court (Summary Administration).
+    </div>
+  </div>
+
+  <div class="fork-down">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <div class="split">
+    <div class="box box-phase">
+      <h3>Path A — Out-of-Court</h3>
+      <div class="subtitle">No court filing required</div>
+      <ul class="checklist">
+        <li>Draft Small Estate Affidavit (state-specific form)</li>
+        <li>Fill in estate details, values, heir info</li>
+        <li>Attach copy of will (if exists)</li>
+        <li>Get affidavit notarized</li>
+        <li>Keep notarized original — this is your authority</li>
+      </ul>
+      <div style="margin-top: 10px;">
+        <span class="data-tag">Collect: notarization date</span>
+      </div>
+    </div>
+    <div class="box box-phase">
+      <h3>Path B — Court Filing</h3>
+      <div class="subtitle">Summary Administration required</div>
+      <ul class="checklist">
+        <li>Draft Small Estate Affidavit (state-specific form)</li>
+        <li>Fill in estate details, values, heir info</li>
+        <li>Attach copy of will (if exists)</li>
+        <li>File affidavit with Probate Court</li>
+        <li>Pay filing fee</li>
+        <li>Receive court order / Certificate of Transfer</li>
+        <li>Order 3–5 certified copies of court order</li>
+      </ul>
+      <div style="margin-top: 10px;">
+        <span class="data-tag">Collect: filing date</span>
+        <span class="data-tag">Collect: court order date</span>
+        <span class="data-tag">Collect: filing fee amount</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="merge-up">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Phase 4 — Collect Assets (Parallel Tracks)</div>
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="box box-gate">
+    <span class="gate-tag">GATE</span>
+    <h3>Notarized Affidavit or Court Order in Hand</h3>
+    <div class="detail">
+      You now have legal authority to collect assets. Present this document to each institution.
+    </div>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <div class="box box-branch" style="max-width: 900px;">
+    <span class="branch-tag">PARALLEL TRACKS</span>
+    <h3>Which asset types exist? (from intake)</h3>
+    <div class="detail">
+      Each track runs independently. Only tracks matching the user's asset profile are shown.
+    </div>
+  </div>
+
+  <div class="fork-down-4">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <div class="quad">
+    <div class="box box-track">
+      <h3>Bank Accounts</h3>
+      <div class="subtitle">if ownsSoleBankAccounts</div>
+      <ul class="checklist">
+        <li>Visit bank with affidavit + death cert</li>
+        <li>Request account closure or retitling</li>
+        <li>Deposit funds to estate account or heirs</li>
+      </ul>
+      <div style="margin-top: 8px;">
+        <span class="data-tag">Amount collected</span>
+        <span class="data-tag">Date</span>
+      </div>
+    </div>
+    <div class="box box-track">
+      <h3>Vehicles</h3>
+      <div class="subtitle">if ownsSoleVehicles</div>
+      <ul class="checklist">
+        <li>Obtain vehicle title</li>
+        <li>Complete state DMV transfer form</li>
+        <li>Visit DMV with title + death cert</li>
+        <li>Transfer title to heir or sell</li>
+      </ul>
+      <div style="margin-top: 8px;">
+        <span class="data-tag">Transfer date</span>
+        <span class="data-tag">New owner</span>
+      </div>
+    </div>
+    <div class="box box-track">
+      <h3>Real Estate</h3>
+      <div class="subtitle">if ownsSoleRealEstate<br>AND state allows</div>
+      <ul class="checklist">
+        <li>Record affidavit with county recorder</li>
+        <li>Prepare & file deed transfer</li>
+        <li>Update property insurance</li>
+        <li>Continue mortgage until transfer</li>
+      </ul>
+      <div style="margin-top: 8px;">
+        <span class="data-tag">Recording date</span>
+        <span class="data-tag">Deed transfer</span>
+      </div>
+    </div>
+    <div class="box box-track">
+      <h3>Other Assets</h3>
+      <div class="subtitle">if hasOtherProbateAssets</div>
+      <ul class="checklist">
+        <li>Inventory and secure items</li>
+        <li>Get professional appraisal</li>
+        <li>Distribute to heir or sell</li>
+      </ul>
+      <div style="margin-top: 8px;">
+        <span class="data-tag">Disposition</span>
+        <span class="data-tag">Value</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="merge-up-4">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Phase 5 — Settle Debts (Concurrent with Phase 4)</div>
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="box box-phase">
+    <h3>Phase 5 — Settle Debts</h3>
+    <div class="subtitle">Pay what's owed before distributing to heirs</div>
+    <ul class="checklist">
+      <li>Notify each known creditor of the death (in writing)</li>
+      <li>Pay in priority order: funeral → medical → taxes → secured → unsecured</li>
+      <li>Keep receipts and records of every payment</li>
+    </ul>
+    <div style="margin-top: 8px;">
+      <span class="data-tag">Collect: creditor payments</span>
+      <span class="data-tag">Collect: receipts</span>
+      <span class="data-tag">Collect: running balance</span>
+    </div>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <!-- Branch: Solvency check -->
+  <div class="box box-branch">
+    <span class="branch-tag">BRANCHING POINT</span>
+    <h3>Do debts exceed assets?</h3>
+    <div class="detail">
+      If the estate owes more than it owns, the distribution rules change significantly.
+    </div>
+  </div>
+
+  <div class="fork-down">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <div class="split">
+    <div class="box box-alert">
+      <span class="alert-tag">INSOLVENT ESTATE</span>
+      <h3>Debts > Assets</h3>
+      <div class="detail">
+        Estate cannot pay all debts. User is <strong>not personally liable</strong> (usually), but distribution is blocked. Recommend <strong>attorney consultation</strong> for priority payment guidance.
+      </div>
+    </div>
+    <div class="box box-phase">
+      <h3>Solvent — Debts Paid</h3>
+      <div class="detail">
+        All known debts settled. Remaining assets available for distribution to heirs.
+      </div>
+    </div>
+  </div>
+
+  <div class="merge-up">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Phase 6 — Distribute to Heirs</div>
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="box box-gate">
+    <span class="gate-tag">GATE</span>
+    <h3>All Assets Collected + All Debts Settled</h3>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <div class="box box-branch">
+    <span class="branch-tag">BRANCHING POINT</span>
+    <h3>Will or Intestacy?</h3>
+    <div class="detail">
+      Determines who receives what and in what proportion.
+    </div>
+  </div>
+
+  <div class="fork-down">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <div class="split">
+    <div class="box box-phase">
+      <h3>With Will</h3>
+      <div class="subtitle">Distribute per will terms</div>
+      <ul class="checklist">
+        <li>Calculate remaining estate value</li>
+        <li>Distribute to each named beneficiary</li>
+        <li>Get signed receipt from each person</li>
+        <li>Keep copies of all distribution records</li>
+      </ul>
+    </div>
+    <div class="box box-phase">
+      <h3>Without Will (Intestacy)</h3>
+      <div class="subtitle">Distribute per state law</div>
+      <ul class="checklist">
+        <li>Calculate remaining estate value</li>
+        <li>Determine shares per state intestacy rules</li>
+        <li>Distribute to each legal heir</li>
+        <li>Get signed receipt from each person</li>
+        <li>Keep copies of all distribution records</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="merge-up">
+    <div class="fork-arm"><div class="line"></div></div>
+    <div class="fork-arm"><div class="line"></div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Phase 7 — Close Out</div>
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="box box-phase">
+    <h3>Phase 7 — Close Out</h3>
+    <div class="subtitle">Final administrative wrap-up</div>
+    <ul class="checklist">
+      <li>File deceased's final federal income tax return</li>
+      <li>File deceased's final state income tax return</li>
+      <li>File estate income tax return (if estate earned income)</li>
+      <li>Cancel remaining subscriptions and memberships</li>
+      <li>Close email and social media accounts</li>
+      <li>Forward mail via USPS</li>
+      <li>Notify credit bureaus to prevent identity theft</li>
+      <li>Store all records for at least 3 years</li>
+    </ul>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <div class="box box-phase" style="text-align: center; border-color: #38bdf8; background: linear-gradient(135deg, #1a2a3a 0%, #1e3550 100%);">
+    <h3 style="color: #38bdf8; font-size: 18px;">Estate Settled</h3>
+  </div>
+
+</div>
+
+</body>
+</html>
